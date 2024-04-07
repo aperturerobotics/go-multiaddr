@@ -19,7 +19,7 @@ func main() {
 
 	fmt.Printf("%v\n%v\n", m1, m2)
 
-	listener, err := manet.Listen(c.listenMa)
+	listener, err := manet.Listen(m1)
 	if err != nil {
 		panic(err)
 	}
