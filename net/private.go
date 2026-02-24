@@ -60,6 +60,7 @@ var nat64CIDRs = []string{
 
 var nat64 []*net.IPNet
 
+
 // unResolvableDomains do not resolve to an IP address.
 // Ref: https://en.wikipedia.org/wiki/Special-use_domain_name#Reserved_domain_names
 var unResolvableDomains = []string{
