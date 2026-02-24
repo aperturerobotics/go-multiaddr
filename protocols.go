@@ -197,11 +197,9 @@ var (
 		VCode: CodeToVarint(P_WEBTRANSPORT),
 	}
 	protoCERTHASH = Protocol{
-		Name:       "certhash",
-		Code:       P_CERTHASH,
-		VCode:      CodeToVarint(P_CERTHASH),
-		Size:       LengthPrefixedVarSize,
-		Transcoder: TranscoderCertHash,
+		Name:  "certhash",
+		Code:  P_CERTHASH,
+		VCode: CodeToVarint(P_CERTHASH),
 	}
 	protoHTTP = Protocol{
 		Name:  "http",
@@ -221,11 +219,9 @@ var (
 		VCode: CodeToVarint(P_HTTPS),
 	}
 	protoP2P = Protocol{
-		Name:       "p2p",
-		Code:       P_P2P,
-		VCode:      CodeToVarint(P_P2P),
-		Size:       LengthPrefixedVarSize,
-		Transcoder: TranscoderP2P,
+		Name:  "p2p",
+		Code:  P_P2P,
+		VCode: CodeToVarint(P_P2P),
 	}
 	protoUNIX = Protocol{
 		Name:       "unix",

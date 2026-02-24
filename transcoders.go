@@ -11,10 +11,6 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
-
-	"github.com/ipfs/go-cid"
-	"github.com/multiformats/go-multibase"
-	mh "github.com/multiformats/go-multihash"
 )
 
 type Transcoder interface {
@@ -334,64 +330,6 @@ func garlic32Validate(b []byte) error {
 	return nil
 }
 
-var TranscoderP2P = NewTranscoderFromFunctions(p2pStB, p2pBtS, p2pVal)
-
-// The encoded peer ID can either be a CID of a key or a raw multihash (identity
-// or sha256-256).
-func p2pStB(s string) ([]byte, error) {
-	// check if the address is a base58 encoded sha256 or identity multihash
-	if strings.HasPrefix(s, "Qm") || strings.HasPrefix(s, "1") {
-		m, err := mh.FromB58String(s)
-		if err != nil {
-			return nil, fmt.Errorf("failed to parse p2p addr: %s %s", s, err)
-		}
-		if err := p2pVal(m); err != nil {
-			return nil, err
-		}
-		return m, nil
-	}
-
-	// check if the address is a CID
-	c, err := cid.Decode(s)
-	if err != nil {
-		return nil, fmt.Errorf("failed to parse p2p addr: %s %s", s, err)
-	}
-
-	if ty := c.Type(); ty == cid.Libp2pKey {
-		if err := p2pVal(c.Hash()); err != nil {
-			return nil, err
-		}
-		return c.Hash(), nil
-	} else {
-		return nil, fmt.Errorf("failed to parse p2p addr: %s has the invalid codec %d", s, ty)
-	}
-}
-
-func p2pVal(b []byte) error {
-	h, err := mh.Decode([]byte(b))
-	if err != nil {
-		return fmt.Errorf("invalid multihash: %s", err)
-	}
-	// Peer IDs require either sha256 or identity multihash
-	// https://github.com/libp2p/specs/blob/master/peer-ids/peer-ids.md#peer-ids
-	if h.Code != mh.SHA2_256 && h.Code != mh.IDENTITY {
-		return fmt.Errorf("invalid multihash code %d expected sha-256 or identity", h.Code)
-	}
-	// This check should ideally be in multihash. sha256 digest lengths MUST be 32
-	if h.Code == mh.SHA2_256 && h.Length != 32 {
-		return fmt.Errorf("invalid digest length %d for sha256 addr: expected 32", h.Length)
-	}
-	return nil
-}
-
-func p2pBtS(b []byte) (string, error) {
-	m, err := mh.Cast(b)
-	if err != nil {
-		return "", err
-	}
-	return m.B58String(), nil
-}
-
 var TranscoderUnix = NewTranscoderFromFunctions(unixStB, unixBtS, unixValidate)
 
 func unixStB(s string) ([]byte, error) {
@@ -439,28 +377,6 @@ func dnsStB(s string) ([]byte, error) {
 
 func dnsBtS(b []byte) (string, error) {
 	return string(b), nil
-}
-
-var TranscoderCertHash = NewTranscoderFromFunctions(certHashStB, certHashBtS, validateCertHash)
-
-func certHashStB(s string) ([]byte, error) {
-	_, data, err := multibase.Decode(s)
-	if err != nil {
-		return nil, err
-	}
-	if _, err := mh.Decode(data); err != nil {
-		return nil, err
-	}
-	return data, nil
-}
-
-func certHashBtS(b []byte) (string, error) {
-	return multibase.Encode(multibase.Base64url, b)
-}
-
-func validateCertHash(b []byte) error {
-	_, err := mh.Decode(b)
-	return err
 }
 
 var TranscoderHTTPPath = NewTranscoderFromFunctions(httpPathStB, httpPathBtS, validateHTTPPath)
