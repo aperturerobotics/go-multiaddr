@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/netip"
 
-	"github.com/multiformats/go-multiaddr/x/meg"
+	"github.com/aperturerobotics/go-multiaddr/x/meg"
 )
 
 func CaptureAddrPort(network *string, ipPort *netip.AddrPort) (capturePattern meg.Pattern) {

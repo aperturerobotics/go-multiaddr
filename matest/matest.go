@@ -4,7 +4,7 @@ package matest
 import (
 	"slices"
 
-	"github.com/multiformats/go-multiaddr"
+	"github.com/aperturerobotics/go-multiaddr"
 )
 
 type TestingT interface {

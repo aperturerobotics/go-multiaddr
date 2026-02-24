@@ -5,7 +5,7 @@ import (
 	"runtime"
 	"testing"
 
-	ma "github.com/multiformats/go-multiaddr"
+	ma "github.com/aperturerobotics/go-multiaddr"
 )
 
 type GenFunc func() (ma.Multiaddr, error)

@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"net"
 
-	ma "github.com/multiformats/go-multiaddr"
+	ma "github.com/aperturerobotics/go-multiaddr"
 )
 
 func parseBasicNetMaddr(maddr ma.Multiaddr) (net.Addr, error) {

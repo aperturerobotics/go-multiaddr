@@ -3,8 +3,8 @@ package meg_test
 import (
 	"testing"
 
-	"github.com/multiformats/go-multiaddr"
-	"github.com/multiformats/go-multiaddr/x/meg"
+	"github.com/aperturerobotics/go-multiaddr"
+	"github.com/aperturerobotics/go-multiaddr/x/meg"
 )
 
 type preallocatedCapture struct {

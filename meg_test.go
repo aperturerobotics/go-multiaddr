@@ -4,7 +4,7 @@ import (
 	"net/netip"
 	"testing"
 
-	"github.com/multiformats/go-multiaddr/x/meg"
+	"github.com/aperturerobotics/go-multiaddr/x/meg"
 )
 
 func TestMatchAndCaptureMultiaddr(t *testing.T) {

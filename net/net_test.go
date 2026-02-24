@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	ma "github.com/multiformats/go-multiaddr"
+	ma "github.com/aperturerobotics/go-multiaddr"
 	"github.com/stretchr/testify/require"
 )
 

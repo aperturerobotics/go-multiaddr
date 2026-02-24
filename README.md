@@ -26,7 +26,7 @@ Multiaddr is a standard way to represent addresses that:
 ## Install
 
 ```sh
-go get github.com/multiformats/go-multiaddr
+go get github.com/aperturerobotics/go-multiaddr
 ```
 
 ## Usage
@@ -36,7 +36,7 @@ go get github.com/multiformats/go-multiaddr
 #### Simple
 
 ```go
-import ma "github.com/multiformats/go-multiaddr"
+import ma "github.com/aperturerobotics/go-multiaddr"
 
 // construct from a string (err signals parse failure)
 m1, err := ma.NewMultiaddr("/ip4/127.0.0.1/udp/1234")
@@ -66,7 +66,7 @@ m1.Protocols()
 #### En/decapsulate
 
 ```go
-import ma "github.com/multiformats/go-multiaddr"
+import ma "github.com/aperturerobotics/go-multiaddr"
 
 m, err := ma.NewMultiaddr("/ip4/127.0.0.1/udp/1234")
 // <Multiaddr /ip4/127.0.0.1/udp/1234>
@@ -98,7 +98,7 @@ proxyAgain := printerOverProxy.Decapsulate(printer)
 
 ## Contribute
 
-Contributions welcome. Please check out [the issues](https://github.com/multiformats/go-multiaddr/issues).
+Contributions welcome. Please check out [the issues](https://github.com/aperturerobotics/go-multiaddr/issues).
 
 Check out our [contributing document](https://github.com/multiformats/multiformats/blob/master/contributing.md) for more information on how we work, and about contributing in general. Please be aware that all interactions related to multiformats are subject to the IPFS [Code of Conduct](https://github.com/ipfs/community/blob/master/code-of-conduct.md).
 

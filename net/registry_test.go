@@ -4,7 +4,7 @@ import (
 	"net"
 	"testing"
 
-	ma "github.com/multiformats/go-multiaddr"
+	ma "github.com/aperturerobotics/go-multiaddr"
 )
 
 func TestRegisterFrom(t *testing.T) {
