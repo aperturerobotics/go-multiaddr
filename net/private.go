@@ -4,7 +4,7 @@ import (
 	"net"
 	"strings"
 
-	ma "github.com/multiformats/go-multiaddr"
+	ma "github.com/aperturerobotics/go-multiaddr"
 )
 
 // Private4 and Private6 are well-known private networks

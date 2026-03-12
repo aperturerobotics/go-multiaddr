@@ -1,4 +1,4 @@
-module github.com/multiformats/go-multiaddr
+module github.com/aperturerobotics/go-multiaddr
 
 go 1.25
 

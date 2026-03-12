@@ -1,10 +1,10 @@
 {
   "author": "multiformats",
   "bugs": {
-    "url": "https://github.com/multiformats/go-multiaddr/issues"
+    "url": "https://github.com/aperturerobotics/go-multiaddr/issues"
   },
   "gx": {
-    "dvcsimport": "github.com/multiformats/go-multiaddr"
+    "dvcsimport": "github.com/aperturerobotics/go-multiaddr"
   },
   "gxDependencies": [
     {

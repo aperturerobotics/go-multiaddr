@@ -3,7 +3,7 @@ package multiaddr
 import (
 	"fmt"
 
-	"github.com/multiformats/go-multiaddr/x/meg"
+	"github.com/aperturerobotics/go-multiaddr/x/meg"
 )
 
 // Split returns the sub-address portions of a multiaddr.

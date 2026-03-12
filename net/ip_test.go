@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	ma "github.com/multiformats/go-multiaddr"
+	ma "github.com/aperturerobotics/go-multiaddr"
 )
 
 func TestIsWellKnownPrefixIPv4ConvertedIPv6Address(t *testing.T) {
