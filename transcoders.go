@@ -12,8 +12,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/ipfs/go-cid"
-	"github.com/multiformats/go-multibase"
+	"github.com/aperturerobotics/go-multibase"
 	mh "github.com/multiformats/go-multihash"
 )
 
@@ -336,35 +335,17 @@ func garlic32Validate(b []byte) error {
 
 var TranscoderP2P = NewTranscoderFromFunctions(p2pStB, p2pBtS, p2pVal)
 
-// The encoded peer ID can either be a CID of a key or a raw multihash (identity
-// or sha256-256).
+// The encoded peer ID is a base58btc-encoded raw multihash (sha256-256 or
+// identity).
 func p2pStB(s string) ([]byte, error) {
-	// check if the address is a base58 encoded sha256 or identity multihash
-	if strings.HasPrefix(s, "Qm") || strings.HasPrefix(s, "1") {
-		m, err := mh.FromB58String(s)
-		if err != nil {
-			return nil, fmt.Errorf("failed to parse p2p addr: %s %s", s, err)
-		}
-		if err := p2pVal(m); err != nil {
-			return nil, err
-		}
-		return m, nil
-	}
-
-	// check if the address is a CID
-	c, err := cid.Decode(s)
+	m, err := mh.FromB58String(s)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse p2p addr: %s %s", s, err)
 	}
-
-	if ty := c.Type(); ty == cid.Libp2pKey {
-		if err := p2pVal(c.Hash()); err != nil {
-			return nil, err
-		}
-		return c.Hash(), nil
-	} else {
-		return nil, fmt.Errorf("failed to parse p2p addr: %s has the invalid codec %d", s, ty)
+	if err := p2pVal(m); err != nil {
+		return nil, err
 	}
+	return m, nil
 }
 
 func p2pVal(b []byte) error {

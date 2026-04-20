@@ -8,7 +8,7 @@ import (
 )
 
 func TestMatchAndCaptureMultiaddr(t *testing.T) {
-	m := StringCast("/ip4/1.2.3.4/udp/8231/quic-v1/webtransport/certhash/b2uaraocy6yrdblb4sfptaddgimjmmpy/certhash/zQmbWTwYGcmdyK9CYfNBcfs9nhZs17a6FQ4Y8oea278xx41")
+	m := StringCast("/ip4/1.2.3.4/udp/8231/webrtc-direct/certhash/uEiDDq4_xNyDorZBH3TlGazyJdOWSwvo4PUo5YHFMrvDE8g/certhash/zQmbWTwYGcmdyK9CYfNBcfs9nhZs17a6FQ4Y8oea278xx41")
 
 	var udpPort string
 	var certhashes []string
@@ -18,8 +18,7 @@ func TestMatchAndCaptureMultiaddr(t *testing.T) {
 			meg.Val(P_IP6),
 		),
 		meg.CaptureString(P_UDP, &udpPort),
-		meg.Val(P_QUIC_V1),
-		meg.Val(P_WEBTRANSPORT),
+		meg.Val(P_WEBRTC_DIRECT),
 		meg.CaptureZeroOrMoreStrings(P_CERTHASH, &certhashes),
 	)
 	if !found {
@@ -46,7 +45,7 @@ func TestMatchAndCaptureMultiaddr(t *testing.T) {
 }
 
 func TestCaptureAddrPort(t *testing.T) {
-	m := StringCast("/ip4/1.2.3.4/udp/8231/quic-v1/webtransport")
+	m := StringCast("/ip4/1.2.3.4/udp/8231/quic-v1")
 	var addrPort netip.AddrPort
 	var network string
 

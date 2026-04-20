@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	slices0 "slices"
 	"strings"
 
 	"golang.org/x/exp/slices"
@@ -269,12 +270,7 @@ addrloop:
 
 // Contains reports whether addr is contained in addrs.
 func Contains(addrs []Multiaddr, addr Multiaddr) bool {
-	for _, a := range addrs {
-		if addr.Equal(a) {
-			return true
-		}
-	}
-	return false
+	return slices0.ContainsFunc(addrs, addr.Equal)
 }
 
 // Unique deduplicates addresses in place, leave only unique addresses.

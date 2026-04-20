@@ -16,7 +16,6 @@ const (
 	P_IPCIDR            = 43
 	P_QUIC              = 460
 	P_QUIC_V1           = 461
-	P_WEBTRANSPORT      = 465
 	P_CERTHASH          = 466
 	P_SCTP              = 132
 	P_CIRCUIT           = 290
@@ -24,7 +23,6 @@ const (
 	P_UTP               = 302
 	P_UNIX              = 400
 	P_P2P               = 421
-	P_IPFS              = P_P2P // alias for backwards compatibility
 	P_HTTP              = 480
 	P_HTTP_PATH         = 481
 	P_HTTPS             = 443 // deprecated alias for /tls/http
@@ -191,11 +189,6 @@ var (
 		Code:  P_QUIC_V1,
 		VCode: CodeToVarint(P_QUIC_V1),
 	}
-	protoWEBTRANSPORT = Protocol{
-		Name:  "webtransport",
-		Code:  P_WEBTRANSPORT,
-		VCode: CodeToVarint(P_WEBTRANSPORT),
-	}
 	protoCERTHASH = Protocol{
 		Name:       "certhash",
 		Code:       P_CERTHASH,
@@ -315,7 +308,6 @@ func init() {
 		protoUDT,
 		protoQUIC,
 		protoQUICV1,
-		protoWEBTRANSPORT,
 		protoCERTHASH,
 		protoHTTP,
 		protoHTTPPath,
@@ -337,8 +329,4 @@ func init() {
 			panic(err)
 		}
 	}
-
-	// explicitly set both of these
-	protocolsByName["p2p"] = protoP2P
-	protocolsByName["ipfs"] = protoP2P
 }

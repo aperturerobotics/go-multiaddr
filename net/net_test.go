@@ -30,8 +30,7 @@ func TestDial(t *testing.T) {
 	}
 
 	var wg sync.WaitGroup
-	wg.Add(1)
-	go func() {
+	wg.Go(func() {
 		cB, err := listener.Accept()
 		if err != nil {
 			t.Error("failed to accept")
@@ -47,8 +46,7 @@ func TestDial(t *testing.T) {
 			cB.Write(buf)
 		}
 
-		wg.Done()
-	}()
+	})
 
 	maddr := newMultiaddr(t, "/ip4/127.0.0.1/tcp/4321")
 	cA, err := Dial(maddr)
@@ -143,8 +141,7 @@ func TestListen(t *testing.T) {
 	}
 
 	var wg sync.WaitGroup
-	wg.Add(1)
-	go func() {
+	wg.Go(func() {
 		cB, err := listener.Accept()
 		if err != nil {
 			t.Error("failed to accept")
@@ -164,8 +161,7 @@ func TestListen(t *testing.T) {
 			cB.Write(buf)
 		}
 
-		wg.Done()
-	}()
+	})
 
 	cA, err := net.Dial("tcp", "127.0.0.1:4322")
 	if err != nil {
@@ -263,8 +259,7 @@ func TestListenAndDial(t *testing.T) {
 	}
 
 	var wg sync.WaitGroup
-	wg.Add(1)
-	go func() {
+	wg.Go(func() {
 		cB, err := listener.Accept()
 		if err != nil {
 			t.Error("failed to accept")
@@ -284,8 +279,7 @@ func TestListenAndDial(t *testing.T) {
 			cB.Write(buf)
 		}
 
-		wg.Done()
-	}()
+	})
 
 	cA, err := Dial(newMultiaddr(t, "/ip4/127.0.0.1/tcp/4323"))
 	if err != nil {
@@ -322,9 +316,8 @@ func TestListenPacketAndDial(t *testing.T) {
 	}
 
 	var wg sync.WaitGroup
-	wg.Add(1)
 
-	go func() {
+	wg.Go(func() {
 		if !pc.LocalMultiaddr().Equal(maddr) {
 			t.Error("connection multiaddr not equal:", maddr, pc.LocalMultiaddr())
 		}
@@ -336,8 +329,7 @@ func TestListenPacketAndDial(t *testing.T) {
 		}
 		pc.WriteTo(buffer, addr)
 
-		wg.Done()
-	}()
+	})
 
 	cn, err := Dial(maddr)
 	if err != nil {
@@ -448,7 +440,7 @@ func TestIPUnspecified(t *testing.T) {
 }
 
 func TestIP6LinkLocal(t *testing.T) {
-	for a := 0; a < 65536; a++ {
+	for a := range 65536 {
 		isLinkLocal := a&0xffc0 == 0xfe80 || a&0xff0f == 0xff02
 		m := newMultiaddr(t, fmt.Sprintf("/ip6/%x::1", a))
 		if IsIP6LinkLocal(m) != isLinkLocal {
@@ -512,14 +504,12 @@ func TestWrapNetConn(t *testing.T) {
 
 	var wg sync.WaitGroup
 	defer wg.Wait()
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
+	wg.Go(func() {
 		cB, err := listener.Accept()
 		checkErr(err, "failed to accept")
 		_ = cB.(halfOpen)
 		cB.Close()
-	}()
+	})
 
 	cA, err := net.Dial("tcp", listener.Addr().String())
 	checkErr(err, "failed to dial")

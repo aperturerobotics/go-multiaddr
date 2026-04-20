@@ -3,6 +3,7 @@ package meg
 import (
 	"errors"
 	"fmt"
+	"slices"
 	"strconv"
 	"strings"
 )
@@ -35,8 +36,8 @@ func PatternToMatcher(patterns ...Pattern) Matcher {
 	states = append(states, MatchState{codeOrKind: done})
 	nextIdx := len(states) - 1
 	// Build the chain by composing patterns from right to left.
-	for i := len(patterns) - 1; i >= 0; i-- {
-		states, nextIdx = patterns[i](states, nextIdx)
+	for _, v := range slices.Backward(patterns) {
+		states, nextIdx = v(states, nextIdx)
 	}
 	return Matcher{states: states, startIdx: nextIdx}
 }

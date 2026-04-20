@@ -7,6 +7,7 @@ package meg
 
 import (
 	"fmt"
+	"slices"
 )
 
 type stateKind = int
@@ -148,8 +149,8 @@ func Match[T any, PT interface {
 				reversedCaptures = append(reversedCaptures, captureWithVal{c.f, c.v})
 				c = c.prev
 			}
-			for i := len(reversedCaptures) - 1; i >= 0; i-- {
-				if err := reversedCaptures[i].f(reversedCaptures[i].v); err != nil {
+			for _, v := range slices.Backward(reversedCaptures) {
+				if err := v.f(v.v); err != nil {
 					return false, err
 				}
 			}

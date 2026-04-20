@@ -8,8 +8,6 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/ipfs/go-cid"
-	mh "github.com/multiformats/go-multihash"
 	"github.com/stretchr/testify/require"
 )
 
@@ -142,10 +140,8 @@ func TestConstructFails(t *testing.T) {
 		"/ip4/127.0.0.1/tcp",
 		"/ip4/127.0.0.1/quic/1234",
 		"/ip4/127.0.0.1/quic-v1/1234",
-		"/ip4/127.0.0.1/udp/1234/quic-v1/webtransport/certhash",
-		"/ip4/127.0.0.1/udp/1234/quic-v1/webtransport/certhash/b2uaraocy6yrdblb4sfptaddgimjmmp", // 1 character missing from certhash
-		"/ip4/127.0.0.1/ipfs",
-		"/ip4/127.0.0.1/ipfs/tcp",
+		"/ip4/127.0.0.1/udp/1234/quic-v1/certhash",
+		"/ip4/127.0.0.1/udp/1234/quic-v1/certhash/uEiDDq4_xNyDorZBH3TlGazyJdOWSwvo4PUo5YHFMrvDE8?", // invalid base64url character
 		"/ip4/127.0.0.1/p2p",
 		"/ip4/127.0.0.1/p2p/tcp",
 		"/unix",
@@ -208,48 +204,29 @@ var good = []string{
 	"/sctp/1234",
 	"/udp/65535",
 	"/tcp/65535",
-	"/ipfs/QmcgpsyWgH8Y8ajJz1Cu72KnS5uo2Aa2LpzU7kinSupNKC",
-	"/ipfs/k2k4r8oqamigqdo6o7hsbfwd45y70oyynp98usk7zmyfrzpqxh1pohl7",
 	"/p2p/QmcgpsyWgH8Y8ajJz1Cu72KnS5uo2Aa2LpzU7kinSupNKC",
-	"/p2p/k2k4r8oqamigqdo6o7hsbfwd45y70oyynp98usk7zmyfrzpqxh1pohl7",
-	"/p2p/bafzbeigvf25ytwc3akrijfecaotc74udrhcxzh2cx3we5qqnw5vgrei4bm",
 	"/p2p/12D3KooWCryG7Mon9orvQxcS1rYZjotPgpwoJNHHKcLLfE4Hf5mV",
-	"/p2p/k51qzi5uqu5dhb6l8spkdx7yxafegfkee5by8h7lmjh2ehc2sgg34z7c15vzqs",
-	"/p2p/bafzaajaiaejcalj543iwv2d7pkjt7ykvefrkfu7qjfi6sduakhso4lay6abn2d5u",
 	"/udp/1234/sctp/1234",
 	"/udp/1234/udt",
 	"/udp/1234/utp",
 	"/tcp/1234/http",
 	"/tcp/1234/tls/http",
 	"/tcp/1234/https",
-	"/ipfs/QmcgpsyWgH8Y8ajJz1Cu72KnS5uo2Aa2LpzU7kinSupNKC/tcp/1234",
-	"/ipfs/k2k4r8oqamigqdo6o7hsbfwd45y70oyynp98usk7zmyfrzpqxh1pohl7/tcp/1234",
 	"/p2p/QmcgpsyWgH8Y8ajJz1Cu72KnS5uo2Aa2LpzU7kinSupNKC/tcp/1234",
-	"/p2p/k2k4r8oqamigqdo6o7hsbfwd45y70oyynp98usk7zmyfrzpqxh1pohl7/tcp/1234",
 	"/ip4/127.0.0.1/udp/1234",
 	"/ip4/127.0.0.1/udp/0",
 	"/ip4/127.0.0.1/tcp/1234",
 	"/ip4/127.0.0.1/tcp/1234/",
 	"/ip4/127.0.0.1/udp/1234/quic",
 	"/ip4/127.0.0.1/udp/1234/quic-v1",
-	"/ip4/127.0.0.1/udp/1234/quic-v1/webtransport",
-	"/ip4/127.0.0.1/udp/1234/quic-v1/webtransport/certhash/b2uaraocy6yrdblb4sfptaddgimjmmpy",
-	"/ip4/127.0.0.1/udp/1234/quic-v1/webtransport/certhash/b2uaraocy6yrdblb4sfptaddgimjmmpy/certhash/zQmbWTwYGcmdyK9CYfNBcfs9nhZs17a6FQ4Y8oea278xx41",
-	"/ip4/127.0.0.1/ipfs/QmcgpsyWgH8Y8ajJz1Cu72KnS5uo2Aa2LpzU7kinSupNKC",
-	"/ip4/127.0.0.1/ipfs/QmcgpsyWgH8Y8ajJz1Cu72KnS5uo2Aa2LpzU7kinSupNKC/tcp/1234",
-	"/ip4/127.0.0.1/ipfs/k2k4r8oqamigqdo6o7hsbfwd45y70oyynp98usk7zmyfrzpqxh1pohl7",
-	"/ip4/127.0.0.1/ipfs/k2k4r8oqamigqdo6o7hsbfwd45y70oyynp98usk7zmyfrzpqxh1pohl7/tcp/1234",
+	"/ip4/127.0.0.1/udp/1234/quic-v1/certhash/uEiDDq4_xNyDorZBH3TlGazyJdOWSwvo4PUo5YHFMrvDE8g",
+	"/ip4/127.0.0.1/udp/1234/quic-v1/certhash/uEiDDq4_xNyDorZBH3TlGazyJdOWSwvo4PUo5YHFMrvDE8g/certhash/zQmbWTwYGcmdyK9CYfNBcfs9nhZs17a6FQ4Y8oea278xx41",
 	"/ip4/127.0.0.1/p2p/QmcgpsyWgH8Y8ajJz1Cu72KnS5uo2Aa2LpzU7kinSupNKC",
 	"/ip4/127.0.0.1/p2p/QmcgpsyWgH8Y8ajJz1Cu72KnS5uo2Aa2LpzU7kinSupNKC/tcp/1234",
-	"/ip4/127.0.0.1/p2p/k2k4r8oqamigqdo6o7hsbfwd45y70oyynp98usk7zmyfrzpqxh1pohl7",
-	"/ip4/127.0.0.1/p2p/k2k4r8oqamigqdo6o7hsbfwd45y70oyynp98usk7zmyfrzpqxh1pohl7/tcp/1234",
 	"/unix/a/b/c/d/e",
 	"/unix/stdio",
 	"/ip4/1.2.3.4/tcp/80/unix/a/b/c/d/e/f",
-	"/ip4/127.0.0.1/ipfs/QmcgpsyWgH8Y8ajJz1Cu72KnS5uo2Aa2LpzU7kinSupNKC/tcp/1234/unix/stdio",
-	"/ip4/127.0.0.1/ipfs/k2k4r8oqamigqdo6o7hsbfwd45y70oyynp98usk7zmyfrzpqxh1pohl7/tcp/1234/unix/stdio",
 	"/ip4/127.0.0.1/p2p/QmcgpsyWgH8Y8ajJz1Cu72KnS5uo2Aa2LpzU7kinSupNKC/tcp/1234/unix/stdio",
-	"/ip4/127.0.0.1/p2p/k2k4r8oqamigqdo6o7hsbfwd45y70oyynp98usk7zmyfrzpqxh1pohl7/tcp/1234/unix/stdio",
 	"/ip4/127.0.0.1/tcp/9090/http/p2p-webrtc-direct",
 	"/ip4/127.0.0.1/tcp/127/ws",
 	"/ip4/127.0.0.1/tcp/127/ws",
@@ -638,13 +615,12 @@ func TestAppendComponent(t *testing.T) {
 }
 
 func TestGetValue(t *testing.T) {
-	a := newMultiaddr(t, "/ip4/127.0.0.1/utp/tcp/5555/udp/1234/tls/utp/ipfs/QmbHVEEepCi7rn7VL7Exxpd2Ci9NNB6ifvqwhsrbRMgQFP")
+	a := newMultiaddr(t, "/ip4/127.0.0.1/utp/tcp/5555/udp/1234/tls/utp/p2p/QmbHVEEepCi7rn7VL7Exxpd2Ci9NNB6ifvqwhsrbRMgQFP")
 	assertValueForProto(t, a, P_IP4, "127.0.0.1")
 	assertValueForProto(t, a, P_UTP, "")
 	assertValueForProto(t, a, P_TLS, "")
 	assertValueForProto(t, a, P_TCP, "5555")
 	assertValueForProto(t, a, P_UDP, "1234")
-	assertValueForProto(t, a, P_IPFS, "QmbHVEEepCi7rn7VL7Exxpd2Ci9NNB6ifvqwhsrbRMgQFP")
 	assertValueForProto(t, a, P_P2P, "QmbHVEEepCi7rn7VL7Exxpd2Ci9NNB6ifvqwhsrbRMgQFP")
 
 	_, err := a.ValueForProtocol(P_IP6)
@@ -754,7 +730,7 @@ func TestRoundTrip(t *testing.T) {
 		"/ip4/127.0.0.1/tcp/123/tls",
 		"/ip4/127.0.0.1/udp/123",
 		"/ip4/127.0.0.1/udp/123/ip6/::",
-		"/ip4/127.0.0.1/udp/1234/quic-v1/webtransport/certhash/uEiDDq4_xNyDorZBH3TlGazyJdOWSwvo4PUo5YHFMrvDE8g",
+		"/ip4/127.0.0.1/udp/1234/quic-v1/certhash/uEiDDq4_xNyDorZBH3TlGazyJdOWSwvo4PUo5YHFMrvDE8g",
 		"/p2p/QmbHVEEepCi7rn7VL7Exxpd2Ci9NNB6ifvqwhsrbRMgQFP",
 		"/p2p/QmbHVEEepCi7rn7VL7Exxpd2Ci9NNB6ifvqwhsrbRMgQFP/unix/a/b/c",
 		"/http-path/tmp%2Fbar",
@@ -766,23 +742,6 @@ func TestRoundTrip(t *testing.T) {
 		}
 		if ma.String() != s {
 			t.Errorf("failed to round trip %q", s)
-		}
-	}
-}
-
-func TestIPFSvP2P(t *testing.T) {
-	var (
-		p2pAddr  = "/p2p/QmbHVEEepCi7rn7VL7Exxpd2Ci9NNB6ifvqwhsrbRMgQFP"
-		ipfsAddr = "/ipfs/QmbHVEEepCi7rn7VL7Exxpd2Ci9NNB6ifvqwhsrbRMgQFP"
-	)
-
-	for _, s := range []string{p2pAddr, ipfsAddr} {
-		ma, err := NewMultiaddr(s)
-		if err != nil {
-			t.Errorf("error when parsing %q: %s", s, err)
-		}
-		if ma.String() != p2pAddr {
-			t.Errorf("expected %q, got %q", p2pAddr, ma.String())
 		}
 	}
 }
@@ -802,19 +761,10 @@ func TestInvalidP2PAddrBytes(t *testing.T) {
 }
 
 func TestInvalidP2PAddrString(t *testing.T) {
-	hashedData, err := mh.Sum([]byte("test"), mh.SHA2_256, -1)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	// using MD5 since it's not a valid data codec
-	unknownCodecCID := cid.NewCidV1(mh.MD5, hashedData).String()
-
 	badStringAddrs := []string{
-		"/p2p/k2k4r8oqamigqdo6o7hsbfwd45y70oyynp98usk7zmyfrzpqxh1pohl-", // invalid multibase encoding
-		"/p2p/?unknownmultibase", // invalid multibase encoding
-		"/p2p/k2jmtxwoe2phm1hbqp0e7nufqf6umvuu2e9qd7ana7h411a0haqj6i2z", // non-libp2p-key codec
-		"/p2p/" + unknownCodecCID, // impossible codec
+		"/p2p/Qm0notbase58",   // invalid base58 character
+		"/p2p/?notbase58char", // invalid base58 character
+		"/p2p/Qm",             // too short to be a valid multihash
 	}
 	for _, a := range badStringAddrs {
 		ma, err := NewMultiaddr(a)
@@ -1065,7 +1015,6 @@ func TestUniqueAddrs(t *testing.T) {
 		{in: []Multiaddr{tcpAddr, quicAddr, tcpAddr}, out: []Multiaddr{tcpAddr, quicAddr}},
 		{in: []Multiaddr{tcpAddr, quicAddr, wsAddr}, out: []Multiaddr{tcpAddr, quicAddr, wsAddr}},
 	} {
-		tc := tc
 		t.Run(fmt.Sprintf("test %d", i), func(t *testing.T) {
 			deduped := Unique(tc.in)
 			for _, a := range tc.out {
@@ -1079,7 +1028,7 @@ func BenchmarkUniqueAddrs(b *testing.B) {
 	b.ReportAllocs()
 	var addrs []Multiaddr
 	r := rand.New(rand.NewSource(1234))
-	for i := 0; i < 100; i++ {
+	for range 100 {
 		tcpAddr := StringCast(fmt.Sprintf("/ip4/127.0.0.1/tcp/%d", r.Intn(math.MaxUint16)))
 		quicAddr := StringCast(fmt.Sprintf("/ip4/127.0.0.1/udp/%d/quic-v1", r.Intn(math.MaxUint16)))
 		wsAddr := StringCast(fmt.Sprintf("/ip4/127.0.0.1/tcp/%d/ws", r.Intn(math.MaxUint16)))
