@@ -11,6 +11,7 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
+	"sync"
 
 	"github.com/aperturerobotics/go-multibase"
 	mh "github.com/multiformats/go-multihash"
@@ -266,11 +267,31 @@ func onion3Validate(b []byte) error {
 
 var TranscoderGarlic64 = NewTranscoderFromFunctions(garlic64StB, garlic64BtS, garlic64Validate)
 
-// i2p uses an alternate character set for base64 addresses. This returns an appropriate encoder.
-var garlicBase64Encoding = base64.NewEncoding("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-~")
+var (
+	garlicBase64Encoding     *base64.Encoding
+	garlicBase64EncodingOnce sync.Once
+	garlicBase32Encoding     *base32.Encoding
+	garlicBase32EncodingOnce sync.Once
+)
+
+// getGarlicBase64Encoding returns the alternate base64 encoder used for i2p addresses.
+func getGarlicBase64Encoding() *base64.Encoding {
+	garlicBase64EncodingOnce.Do(func() {
+		garlicBase64Encoding = base64.NewEncoding("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-~")
+	})
+	return garlicBase64Encoding
+}
+
+// getGarlicBase32Encoding returns the alternate base32 encoder used for i2p addresses.
+func getGarlicBase32Encoding() *base32.Encoding {
+	garlicBase32EncodingOnce.Do(func() {
+		garlicBase32Encoding = base32.NewEncoding("abcdefghijklmnopqrstuvwxyz234567")
+	})
+	return garlicBase32Encoding
+}
 
 func garlic64StB(s string) ([]byte, error) {
-	garlicHostBytes, err := garlicBase64Encoding.DecodeString(s)
+	garlicHostBytes, err := getGarlicBase64Encoding().DecodeString(s)
 	if err != nil {
 		return nil, fmt.Errorf("failed to decode base64 i2p addr: %s %s", s, err)
 	}
@@ -285,7 +306,7 @@ func garlic64BtS(b []byte) (string, error) {
 	if err := garlic64Validate(b); err != nil {
 		return "", err
 	}
-	addr := garlicBase64Encoding.EncodeToString(b)
+	addr := getGarlicBase64Encoding().EncodeToString(b)
 	return addr, nil
 }
 
@@ -299,13 +320,11 @@ func garlic64Validate(b []byte) error {
 
 var TranscoderGarlic32 = NewTranscoderFromFunctions(garlic32StB, garlic32BtS, garlic32Validate)
 
-var garlicBase32Encoding = base32.NewEncoding("abcdefghijklmnopqrstuvwxyz234567")
-
 func garlic32StB(s string) ([]byte, error) {
 	for len(s)%8 != 0 {
 		s += "="
 	}
-	garlicHostBytes, err := garlicBase32Encoding.DecodeString(s)
+	garlicHostBytes, err := getGarlicBase32Encoding().DecodeString(s)
 	if err != nil {
 		return nil, fmt.Errorf("failed to decode base32 garlic addr: %s, err: %v len: %v", s, err, len(s))
 	}
@@ -320,7 +339,7 @@ func garlic32BtS(b []byte) (string, error) {
 	if err := garlic32Validate(b); err != nil {
 		return "", err
 	}
-	return strings.TrimRight(garlicBase32Encoding.EncodeToString(b), "="), nil
+	return strings.TrimRight(getGarlicBase32Encoding().EncodeToString(b), "="), nil
 }
 
 func garlic32Validate(b []byte) error {
